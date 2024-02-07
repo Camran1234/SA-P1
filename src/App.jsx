@@ -6,13 +6,15 @@ import './styles/App.css'
 import {format} from 'date-fns'
 
 function App() {
-  const [currentDateTime, setCurrentDateTime] = useState(new Date());
+  const [currentDateTime, setCurrentDateTime] = useState('HH:mm:ss #M');
   const [formatDate, setFormatDate] = useState('dd/mm/yyyy');
   useEffect(() => {
     // Actualizar la fecha y hora cada segundo
     const intervalId = setInterval(() => {
-      setCurrentDateTime(new Date());
-      setFormatDate(format(new Date(), 'dd/MM/yyyy'));
+      const date = new Date().toLocaleString('en-US', { timeZone: 'America/Guatemala' });
+      const time = new Date().toLocaleTimeString('en-US', { timeZone: 'America/Guatemala' });
+      setCurrentDateTime(time);
+      setFormatDate(format(date, 'dd/MM/yyyy'));
     }, 1000);
     
     // Limpieza del intervalo al desmontar el componente
@@ -37,7 +39,7 @@ function App() {
       <h2>201931581</h2>
       <div>
         <h3>{formatDate}</h3>
-        <p>{currentDateTime.toLocaleTimeString()}</p>
+        <p>{currentDateTime}</p>
       </div>
       <p className="read-the-docs">
         App hecha con Vite y template de React

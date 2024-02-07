@@ -19,14 +19,25 @@ provider "random" {}
 
 resource "random_pet" "name" {}
 
-resource "aws_instance" "web" {
+resource "aws_instance" "master" {
     ami           = "ami-0277155c3f0ab2930"
     instance_type = "t2.micro"
-    user_data     = file("init-script.sh")
+    #user_data     = file("init-script.sh")
     vpc_security_group_ids = [aws_security_group.web-sg.id]
 
     tags = {
-        Name = random_pet.name.id
+        Name = "master-${random_pet.name.id}"
+    }
+}
+
+resource "aws_instance" "client" {
+    ami           = "ami-0277155c3f0ab2930"
+    instance_type = "t2.micro"
+    #user_data     = file("init-script.sh")
+    vpc_security_group_ids = [aws_security_group.web-sg.id]
+
+    tags = {
+        Name = "client-${random_pet.name.id}"
     }
 }
 
