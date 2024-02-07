@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import githubLogo from './assets/github.svg'
+import reactLogo from '/react.svg'
+import githubLogo from '/github.svg'
 import viteLogo from '/vite.svg'
 import './styles/App.css'
 import {format} from 'date-fns'
