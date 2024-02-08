@@ -1,0 +1,47 @@
+---
+- name: Despliegue de una pagina estatica con Nginx
+  hosts: clients
+  become: yes
+  tasks:
+    - name: Actualizar paquetes con yum
+      ansible.builtin.yum:
+        name: '*'
+        state: latest
+      become: yes
+      become_user: root
+
+    - name: Instalar Nginx
+      ansible.builtin.yum:
+        name: nginx
+        state: present
+
+    - name: Copiar la carpeta de la página estática desde el nodo controlador al cliente
+      ansible.builtin.copy:
+        src: ./dist
+        dest: /usr/share/nginx/html
+
+    #- name: Copiar la carpeta de la página estática desde el nodo controlador al cliente
+    #  ansible.builtin.synchronize:
+    #    src: ./dist
+    #    dest: /usr/share/nginx/html/dist
+    #    mode: pull
+    #  delegate_to: localhost
+    #  vars:
+    #    ansible_ssh_extra_args: '-o StrictHostKeyChecking=no -i /home/ec2-user/keyRSA_aws.pem'
+    #    ansible_sudo: yes
+    #    ansible_sudo_user: root
+    #    ansible_sudo_exe: sudo
+    #    ansible_rsync_path: /usr/bin/rsync
+
+
+    - name: Copiar el archivo de configuración de Nginx desde el nodo controlador al cliente
+      ansible.builtin.template:
+        src: ./nginx.conf
+        dest: /etc/nginx/nginx.conf
+      notify: restart nginx
+    
+  handlers:
+    - name: restart nginx
+      systemd:
+        name: nginx
+        state: restarted
